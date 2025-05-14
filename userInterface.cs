@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace PoePart1
 {
@@ -9,10 +10,18 @@ namespace PoePart1
         private string userName = string.Empty;
         private string userQuestion = string.Empty;
 
+        private Dictionary<string, List<string>> topicResponses;
+
+        //Random object for selecting responses
+        private Random rand = new Random();
+        private Check_writeFile fileHandler; // file handler
         //Constructor
         //What the user will see
         public userInterface()
         {
+
+            topicResponses = new Dictionary<string, List<string>>();
+
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine("////////////////////////");
 
@@ -40,6 +49,8 @@ namespace PoePart1
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("Hello " + userName + ", how can I assist you today?");
 
+            
+
             //This do while loop outputs the user's name after every response and allows the user to ask another question 
             do
             {
@@ -60,18 +71,20 @@ namespace PoePart1
                     response(userQuestion);
 
                 }
-            }
-            while (userQuestion != "exit");
+            } while (userQuestion != "exit");
 
-
-
-            }
-            //End of constructor
+}           
         
+
+            
+        //End of constructor
+
 
         //Response method
         private void response(string asked)
         {
+            Boolean responded = false; // Declare at the start of the method
+
             //If user didn't type exit, these responses will be displayed
             if (asked != "exit")
             {
@@ -82,25 +95,47 @@ namespace PoePart1
                 //Array list decleration to store common words that will be ignored
                 ArrayList ignore = new ArrayList();
 
+                topicResponses["passwords"] = new List<string>
+            {
+                "Use strong passwords with a mix of letters, numbers, and symbols.",
+                "Avoid using the same password across multiple sites.",
+                "Change your passwords regularly.",
+                "Enable two-factor authentication where possible.",
+                "Always keep your software and security tools up to date.",
+                "Use unique and different passwords for every login.",
+                "A strong password should include a mix of uppercase and lowercase letters, numbers, and symbols."
+               
+               
+            };
 
-                //These are the stored responses
-                question.Add("Chatbot:-> Use strong passwords and two-factor authentication");
-                question.Add("Chatbot:-> Always keep your software and security tools up to date");
-                question.Add("Chatbot:-> Never click on suspicious links or download attachments");
-                question.Add("Chatbot:-> You can ask me me about cyber-security related questions");
-                question.Add("Chatbot:-> My purpose is to inform you about cyber-security awareness");
-                question.Add("Chatbot:-> You can ask me about how to browse safely");
-                question.Add("Chatbot:-> You can protect your accounts from phishing by using multi-factor authentication" +
-                    ", also phishing attacks almost always have some type of grammar error,so be on the lookout for that");
-                
-                question.Add("Chatbot:-> Watch out for 'Allow Notifications' pop-ups when browsing");
-                question.Add("Chatbot:-> Avoid browsing websites that spam you with ads");
-                question.Add("Chatbot:-> Installing antivirus software and keeping it updated helps with miniizing cyber-attacks ");
-                question.Add("Chatbot:-> Use unique and different passwords for every login");
-                question.Add("Chatbot:-> It's best to use a VPN when browsing so hackers may not track you");
-                question.Add("Chatbot:-> Use different email addresses for different kinds of accounts");
-                
+                topicResponses["safe browsing"] = new List<string>
+            {
+                "Using a VPN encrypts your internet traffic, enhancing privacy.",
+                "Always choose a reputable VPN service.",
+                "A VPN can help you access geo-restricted content securely.",
+                "Installing antivirus software and keeping it updated helps with miniizing cyber-attacks.",
+                "It's best to use a VPN when browsing so hackers may not track you",
+                "Watch out for 'Allow Notifications' pop-ups when browsing",
+                "Never click on suspicious links or download attachments",
+                "Use different email addresses for different kinds of accounts",
+                "Avoid browsing websites that spam you with ads"
+            };
 
+                topicResponses["phishing"] = new List<string>
+            {
+                "Be cautious of emails asking for personal information. Scammers often disguise themselves as trusted organizations.",
+                "Always check the sender's email address to verify authenticity.",
+                "Don't click on suspicious links or download attachments from unknown sources.",
+                "Look for grammatical errors or urgent language in suspicious emails.",
+                "You can protect your accounts from phishing by using multi-factor authentication",
+                "Phishing attacks almost always have some type of grammar error,so be on the lookout for that",
+                "If something seems too good to be true (like winning a lottery you didn't enter), it's likely a phishing attempt.",
+                "Look for unusual spellings or domains that don't match the legitimate organization in emails."
+                
+            };
+
+
+                
                 //These words will be ignored,they're not needed
                 ignore.Add("tell");
                 ignore.Add("what");
@@ -122,11 +157,7 @@ namespace PoePart1
 
                 //This array list will hold the words that are not ignored
                 ArrayList correctFiltered = new ArrayList();
-
-
-                //This will indicate if any relevant words are found
                 Boolean found = false;
-
                 //then display the answer using the for loop
                 //This will check if each word is not contained in the ignore list
                 for (int count = 0; count < filteredQuestion.Length; count++)
@@ -145,7 +176,37 @@ namespace PoePart1
 
                 }
 
-                Boolean found_final = false;
+                foreach (var topic in topicResponses.Keys)
+                {
+                    foreach (string word in correctFiltered)
+                    {
+                        if (topic.Contains(word))
+                        {
+                            List<string> responses = topicResponses[topic];
+                            if (responses.Count > 0)
+                            {
+                                int index = rand.Next(responses.Count);
+                                Console.WriteLine("Chatbot:-> " + responses[index]);
+                                responded = true;
+                            }
+                            else
+                            {
+                                // Handle case where list might be empty
+                                Console.WriteLine("Chatbot:-> Sorry, I don't have information on that right now.");
+                                responded = true;
+                            }
+                            break; // Exit inner loop after response
+                        }
+                    }
+                    if (responded)
+                        break; // Exit outer loop if responded
+                }
+
+                
+
+               
+
+                Boolean found_final = true;
                 string message = "";
                 //then check if it is found
                 if (found)
@@ -187,6 +248,7 @@ namespace PoePart1
 
             }
 
+           
             else
             {
                 //The displayed message when the user exits

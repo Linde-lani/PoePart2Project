@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="aiLogo.cs" />
+    <Compile Include="Check_writeFile.cs" />
     <Compile Include="userInterface.cs" />
     <Compile Include="playAudio.cs" />
     <Compile Include="Run.cs" />
@@ -56,6 +57,7 @@
   <ItemGroup>
     <Content Include="ailogo.png" />
     <Content Include="Greeting.wav" />
+    <Content Include="memory.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
