@@ -134,8 +134,23 @@ namespace PoePart1
                 
             };
 
-
+                topicResponses["curious"] = new List<string>
+            {
+                "Learning about cybersecurity is the first step to staying protected. What specifically are you curious in exploring further?",
                 
+            };
+                topicResponses["worried"] = new List<string>
+            {
+                "It's completely understandable to feel that way, What specific concerns do you have?",
+                "Cybersecurity can seem overwhelming but I'm here to help you understand and stay safe."
+            };
+                topicResponses["frustrated"] = new List<string>
+            {
+                "I understand it can be frustrating.  I'll try to explain it more clearly or provide a different perspective.",
+                "Let's take it one step at a time. What part are you finding difficult?."
+            };
+            
+
                 //These words will be ignored,they're not needed
                 ignore.Add("tell");
                 ignore.Add("what");
